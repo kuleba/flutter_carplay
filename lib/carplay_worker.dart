@@ -140,7 +140,7 @@ class FlutterCarplay {
   /// [CPTabBarTemplate], [CPGridTemplate], [CPListTemplate] If not, it will throw an [TypeError]
   ///
   /// - If animated is true, CarPlay animates the presentation of the template, but will be ignored
-  /// this flag when there isn’t an existing navigation hierarchy to replace.
+  /// this flag when there isn't an existing navigation hierarchy to replace.
   ///
   /// [!] CarPlay cannot have more than 5 templates on one screen.
   static void setRootTemplate({
@@ -272,8 +272,7 @@ class FlutterCarplay {
     if (template.runtimeType == CPGridTemplate ||
         template.runtimeType == CPListTemplate ||
         template.runtimeType == CPInformationTemplate ||
-        template.runtimeType == CPPointOfInterestTemplate
-    ) {
+        template.runtimeType == CPPointOfInterestTemplate) {
       bool isCompleted = await _carPlayController
           .reactToNativeModule(FCPChannelTypes.pushTemplate, <String, dynamic>{
         "template": template.toJson(),
@@ -286,6 +285,35 @@ class FlutterCarplay {
       return isCompleted;
     } else {
       throw TypeError();
+    }
+  }
+
+  /// Оновлює окрему вкладку в TabBarTemplate без перезавантаження всього інтерфейсу.
+  ///
+  /// - tabIndex: індекс вкладки, яку потрібно оновити
+  /// - newTemplate: новий темплейт для вкладки
+  /// - animated: анімація оновлення
+  void updateTabInRootTemplate({
+    required int tabIndex,
+    required dynamic newTemplate,
+    bool animated = true,
+  }) {
+    if (FlutterCarPlayController.currentRootTemplate is CPTabBarTemplate) {
+      final currentRootTemplate =
+          FlutterCarPlayController.currentRootTemplate as CPTabBarTemplate;
+
+      // Перевіряємо чи коректний індекс
+      if (tabIndex >= 0 && tabIndex < currentRootTemplate.templates.length) {
+        // Оновлюємо конкретну вкладку
+        currentRootTemplate.templates[tabIndex] = newTemplate;
+
+        _carPlayController.methodChannel
+            .invokeMethod('updateTabInRootTemplate', <String, dynamic>{
+          'rootTemplate': currentRootTemplate.toJson(),
+          'tabIndex': tabIndex,
+          'animated': animated,
+        });
+      }
     }
   }
 }

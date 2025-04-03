@@ -44,3 +44,10 @@ extension String {
     } ?? []
   }
 }
+
+extension CPTemplate {
+  var indexOfTabBarTemplate: Int? {
+    guard let tabBarTemplate = self.parent as? CPTabBarTemplate else { return nil }
+    return tabBarTemplate.templates.firstIndex(of: self)
+  }
+}

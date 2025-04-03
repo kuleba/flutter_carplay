@@ -80,4 +80,22 @@ class FlutterCarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelega
     
     //FlutterCarPlaySceneDelegate.interfaceController = nil
   }
+  
+  // Додаємо getter для interfaceController
+  static public func getInterfaceController() -> CPInterfaceController? {
+    return self.interfaceController
+  }
+  
+  // Оновлює root template зі збереженням поточної вкладки
+  static public func updateRootTemplatePreservingTab(rootTemplate: CPTabBarTemplate, selectedTabIndex: Int, animated: Bool) {
+    guard let controller = self.interfaceController else { return }
+    
+    // Встановлюємо новий root template
+    controller.setRootTemplate(rootTemplate, animated: animated)
+    
+    // Переключаємося на потрібну вкладку
+    if selectedTabIndex >= 0 && selectedTabIndex < rootTemplate.templates.count {
+      rootTemplate.selectedTemplate = rootTemplate.templates[selectedTabIndex]
+    }
+  }
 }
