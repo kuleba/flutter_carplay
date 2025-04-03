@@ -47,9 +47,12 @@ extension String {
   }
 }
 
+@available(iOS 14.0, *)
 extension CPTemplate {
   var indexOfTabBarTemplate: Int? {
-    guard let tabBarTemplate = self.parent as? CPTabBarTemplate else { return nil }
-    return tabBarTemplate.templates.firstIndex(of: self)
+    if let tabBarTemplate = self.presentingTemplate as? CPTabBarTemplate {
+      return tabBarTemplate.templates.firstIndex(of: self)
+    }
+    return nil
   }
 }

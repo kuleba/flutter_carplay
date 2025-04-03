@@ -219,14 +219,15 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
       // Створюємо об'єкт FCPTabBarTemplate з JSON
       let fcpTemplate = FCPTabBarTemplate(obj: templateMap)
       
-      // Отримуємо CPTabBarTemplate
-      if let rootTemplate = fcpTemplate.getTemplate() as? CPTabBarTemplate {
+      // Отримуємо CPTabBarTemplate через властивість get, а не getTemplate
+      if let rootTemplate = fcpTemplate.get as? CPTabBarTemplate {
         if let interfaceController = FlutterCarPlaySceneDelegate.getInterfaceController() {
           // Зберігаємо поточний індекс вкладки
           let currentSelectedIndex = tabIndex
           
           // Оновлюємо вміст root template
           SwiftFlutterCarplayPlugin.rootTemplate = rootTemplate
+          SwiftFlutterCarplayPlugin.objcRootTemplate = fcpTemplate
           
           // Оновлюємо UI у CarPlay
           FlutterCarPlaySceneDelegate.updateRootTemplatePreservingTab(
