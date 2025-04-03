@@ -95,7 +95,9 @@ class FlutterCarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelega
     
     // Переключаємося на потрібну вкладку
     if selectedTabIndex >= 0 && selectedTabIndex < rootTemplate.templates.count {
-      rootTemplate.selectedTemplate = rootTemplate.templates[selectedTabIndex]
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        controller.setTabBarTemplate(rootTemplate, selectedTemplate: rootTemplate.templates[selectedTabIndex], animated: animated)
+      }
     }
   }
 }

@@ -216,26 +216,24 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
       let animated = args["animated"] as! Bool
       let templateMap = args["rootTemplate"] as! [String: Any]
       
-      if let rootTemplate = objcRootTemplate?.fromJson(json: templateMap) as? CPTabBarTemplate {
+      // Створюємо об'єкт FCPTabBarTemplate з JSON
+      let fcpTemplate = FCPTabBarTemplate(obj: templateMap)
+      
+      // Отримуємо CPTabBarTemplate
+      if let rootTemplate = fcpTemplate.getTemplate() as? CPTabBarTemplate {
         if let interfaceController = FlutterCarPlaySceneDelegate.getInterfaceController() {
           // Зберігаємо поточний індекс вкладки
-          let currentSelectedIndex = rootTemplate.selectedTemplate?.indexOfTabBarTemplate
+          let currentSelectedIndex = tabIndex
           
           // Оновлюємо вміст root template
           SwiftFlutterCarplayPlugin.rootTemplate = rootTemplate
           
           // Оновлюємо UI у CarPlay
-          if let currentIndex = currentSelectedIndex {
-            // Зберігаємо вибрану вкладку замість повернення до першої
-            FlutterCarPlaySceneDelegate.updateRootTemplatePreservingTab(
-              rootTemplate: rootTemplate, 
-              selectedTabIndex: currentIndex, 
-              animated: animated
-            )
-          } else {
-            // Якщо не вдалося визначити поточну вкладку, просто оновлюємо
-            FlutterCarPlaySceneDelegate.forceUpdateRootTemplate()
-          }
+          FlutterCarPlaySceneDelegate.updateRootTemplatePreservingTab(
+            rootTemplate: rootTemplate, 
+            selectedTabIndex: currentSelectedIndex, 
+            animated: animated
+          )
           
           result(true)
         } else {
@@ -283,4 +281,10 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
       }
     }
   }
+}
+
+// Додаємо нове значення до FCPChannelTypes
+// Спочатку знайдіть enum FCPChannelTypes і додайте новий case
+extension FCPChannelTypes {
+  static let updateTabInRootTemplate = "updateTabInRootTemplate"
 }
