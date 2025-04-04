@@ -52,8 +52,6 @@ class NowPlayingManager {
     VoidCallback? onNextTrack,
     VoidCallback? onPreviousTrack,
   }) {
-    final FlutterCarplay carplay = FlutterCarplay();
-
     // Створення EventChannel для прослуховування подій
     _controller.eventChannel.receiveBroadcastStream().listen((event) {
       if (event is Map<String, dynamic>) {

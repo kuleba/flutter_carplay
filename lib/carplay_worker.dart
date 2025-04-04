@@ -22,6 +22,17 @@ import 'package:flutter_carplay/constants/private_constants.dart';
 /// - [What is CarPlay?](https://developer.apple.com/carplay/)
 /// - [Request CarPlay Framework](https://developer.apple.com/contact/carplay/)
 /// - [Learn more about MFi Program](https://mfi.apple.com)
+// Клас для представлення подій CarPlay
+class FCPEvent {
+  final String type;
+  final Map<String, dynamic> data;
+
+  FCPEvent({required this.type, required this.data});
+}
+
+// Тип для функції-слухача подій
+typedef FCPEventListener = void Function(FCPEvent event);
+
 class FlutterCarplay {
   /// A main Flutter CarPlay Controller to manage the system.
   static final FlutterCarPlayController _carPlayController =
@@ -38,6 +49,9 @@ class FlutterCarplay {
   /// and will be transmitted to the main code, allowing the user to access
   /// the current connection status.
   Function(CPConnectionStatusTypes status)? _onCarplayConnectionChange;
+
+  /// Список слухачів подій
+  final List<FCPEventListener> _listeners = [];
 
   /// Creates an [FlutterCarplay] and starts the connection.
   FlutterCarplay() {
@@ -87,6 +101,18 @@ class FlutterCarplay {
           break;
         default:
           break;
+      }
+
+      // Додайте обробку нових типів подій
+      final String type = event["type"] as String? ?? "";
+      final Map<String, dynamic> data =
+          Map<String, dynamic>.from((event["data"] as Map?) ?? {});
+
+// Надсилаємо всі події, в тому числі аудіо-події, до всіх слухачів
+      if (_listeners.isNotEmpty) {
+        for (final listener in _listeners) {
+          listener(FCPEvent(type: type, data: Map<String, dynamic>.from(data)));
+        }
       }
     });
   }
@@ -315,5 +341,15 @@ class FlutterCarplay {
         });
       }
     }
+  }
+
+  /// Додайте метод для додавання слухачів
+  void addListener(FCPEventListener listener) {
+    _listeners.add(listener);
+  }
+
+  /// Додайте метод для видалення слухачів
+  void removeListener(FCPEventListener listener) {
+    _listeners.remove(listener);
   }
 }
