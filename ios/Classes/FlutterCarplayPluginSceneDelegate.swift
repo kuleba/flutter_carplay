@@ -93,13 +93,7 @@ class FlutterCarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelega
     // Встановлюємо новий root template
     controller.setRootTemplate(rootTemplate, animated: animated)
     
-    // Переключаємося на потрібну вкладку
-    if selectedTabIndex >= 0 && selectedTabIndex < rootTemplate.templates.count {
-      // Оскільки немає прямого методу для зміни вкладки, використовуємо selectedTemplate
-      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-        // Просто встановлюємо вибрану вкладку через властивість
-        rootTemplate.selectedTemplate = rootTemplate.templates[selectedTabIndex]
-      }
-    }
+    // Вибір вкладки залишаємо на користувача або CarPlay, 
+    // так як selectedTemplate є read-only властивістю
   }
 }
