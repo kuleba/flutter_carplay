@@ -242,6 +242,41 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
         result(false)
       }
       break;
+    case FCPChannelTypes.updateNowPlayingInfo:
+      guard let args = call.arguments as? [String: Any] else {
+        result(false)
+        return
+      }
+      
+      let title = args["title"] as! String
+      let artist = args["artist"] as? String
+      let albumTitle = args["albumTitle"] as? String
+      let duration = args["duration"] as? Double
+      let elapsedTime = args["elapsedTime"] as? Double
+      let imageUrl = args["imageUrl"] as? String
+      
+      NowPlayingManager.shared.updateNowPlayingInfo(
+        title: title,
+        artist: artist,
+        albumTitle: albumTitle,
+        duration: duration,
+        elapsedTime: elapsedTime,
+        imageUrl: imageUrl
+      )
+      
+      result(true)
+      break
+    case FCPChannelTypes.updatePlaybackPosition:
+      guard let args = call.arguments as? [String: Any] else {
+        result(false)
+        return
+      }
+      
+      let position = args["position"] as! Double
+      NowPlayingManager.shared.updatePlaybackPosition(position: position)
+      
+      result(true)
+      break
     default:
       result(false)
       break
@@ -280,10 +315,16 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
       }
     }
   }
+  
+  static func sendEvent(type: String, data: [String: Any]) {
+    FCPStreamHandlerPlugin.sendEvent(type: type, data: data)
+  }
 }
 
 // Додаємо нове значення до FCPChannelTypes
 // Спочатку знайдіть enum FCPChannelTypes і додайте новий case
 extension FCPChannelTypes {
   static let updateTabInRootTemplate = "updateTabInRootTemplate"
+  static let updateNowPlayingInfo = "updateNowPlayingInfo"
+  static let updatePlaybackPosition = "updatePlaybackPosition"
 }
