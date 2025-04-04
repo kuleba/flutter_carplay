@@ -55,7 +55,6 @@ class NowPlayingManager {
     final FlutterCarplay carplay = FlutterCarplay();
 
     // Створення EventChannel для прослуховування подій
-
     _controller.eventChannel.receiveBroadcastStream().listen((event) {
       if (event is Map<String, dynamic>) {
         final String? type = event['type'] as String?;
