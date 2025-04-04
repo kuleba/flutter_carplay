@@ -95,14 +95,10 @@ class FlutterCarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelega
     
     // Переключаємося на потрібну вкладку
     if selectedTabIndex >= 0 && selectedTabIndex < rootTemplate.templates.count {
-      // В CarPlay немає методу setTabBarTemplate, тому потрібно використати іншу техніку
+      // Оскільки немає прямого методу для зміни вкладки, використовуємо selectedTemplate
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-        // Використовуємо властивість selectedTemplate для вибору вкладки
-        let selectedTemplate = rootTemplate.templates[selectedTabIndex]
-        // В iOS 14+ можна використати метод показу шаблону
-        if #available(iOS 14.0, *) {
-          rootTemplate.showTemplate(selectedTemplate, animated: animated)
-        }
+        // Просто встановлюємо вибрану вкладку через властивість
+        rootTemplate.selectedTemplate = rootTemplate.templates[selectedTabIndex]
       }
     }
   }

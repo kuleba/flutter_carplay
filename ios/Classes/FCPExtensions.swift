@@ -50,8 +50,9 @@ extension String {
 @available(iOS 14.0, *)
 extension CPTemplate {
   var indexOfTabBarTemplate: Int? {
-    if let tabBarTemplate = self.presentingTemplate as? CPTabBarTemplate {
-      return tabBarTemplate.templates.firstIndex(of: self)
+    // Будемо використовувати прямий доступ до rootTemplate
+    if let rootTemplate = SwiftFlutterCarplayPlugin.rootTemplate as? CPTabBarTemplate {
+      return rootTemplate.templates.firstIndex(of: self)
     }
     return nil
   }

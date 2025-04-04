@@ -220,26 +220,24 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
       let fcpTemplate = FCPTabBarTemplate(obj: templateMap)
       
       // Отримуємо CPTabBarTemplate через властивість get, а не getTemplate
-      if let rootTemplate = fcpTemplate.get as? CPTabBarTemplate {
-        if let interfaceController = FlutterCarPlaySceneDelegate.getInterfaceController() {
-          // Зберігаємо поточний індекс вкладки
-          let currentSelectedIndex = tabIndex
-          
-          // Оновлюємо вміст root template
-          SwiftFlutterCarplayPlugin.rootTemplate = rootTemplate
-          SwiftFlutterCarplayPlugin.objcRootTemplate = fcpTemplate
-          
-          // Оновлюємо UI у CarPlay
-          FlutterCarPlaySceneDelegate.updateRootTemplatePreservingTab(
-            rootTemplate: rootTemplate, 
-            selectedTabIndex: currentSelectedIndex, 
-            animated: animated
-          )
-          
-          result(true)
-        } else {
-          result(false)
-        }
+      let rootTemplate = fcpTemplate.get
+      
+      if FlutterCarPlaySceneDelegate.getInterfaceController() != nil {
+        // Зберігаємо поточний індекс вкладки
+        let currentSelectedIndex = tabIndex
+        
+        // Оновлюємо вміст root template
+        SwiftFlutterCarplayPlugin.rootTemplate = rootTemplate
+        SwiftFlutterCarplayPlugin.objcRootTemplate = fcpTemplate
+        
+        // Оновлюємо UI у CarPlay
+        FlutterCarPlaySceneDelegate.updateRootTemplatePreservingTab(
+          rootTemplate: rootTemplate, 
+          selectedTabIndex: currentSelectedIndex, 
+          animated: animated
+        )
+        
+        result(true)
       } else {
         result(false)
       }
