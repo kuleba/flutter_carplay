@@ -9,6 +9,7 @@ import 'package:flutter_carplay/models/information/information_template.dart';
 import 'package:flutter_carplay/models/poi/poi_template.dart';
 import 'package:flutter_carplay/models/tabbar/tabbar_template.dart';
 import 'package:flutter_carplay/constants/private_constants.dart';
+import 'package:flutter_carplay/models/now_playing/now_playing_template.dart';
 
 /// An object in order to integrate Apple CarPlay in navigation and
 /// manage all user interface elements appearing on your screens displayed on
@@ -140,7 +141,7 @@ class FlutterCarplay {
   /// [CPTabBarTemplate], [CPGridTemplate], [CPListTemplate] If not, it will throw an [TypeError]
   ///
   /// - If animated is true, CarPlay animates the presentation of the template, but will be ignored
-  /// this flag when there isn’t an existing navigation hierarchy to replace.
+  /// this flag when there isn't an existing navigation hierarchy to replace.
   ///
   /// [!] CarPlay cannot have more than 5 templates on one screen.
   static void setRootTemplate({
@@ -259,10 +260,10 @@ class FlutterCarplay {
     );
   }
 
-  /// Adds a template to the navigation hierarchy and displays it.
+  /// Pushes the specified template onto the template navigation hierarchy.
   ///
   /// - template is to add to the navigation hierarchy. **Must be one of the type:**
-  /// [CPGridTemplate] or [CPListTemplate] [CPInformationTemplat] [CPPointOfInterestTemplate] If not, it will throw an [TypeError]
+  /// [CPGridTemplate] or [CPListTemplate] [CPInformationTemplat] [CPPointOfInterestTemplate] [CPNowPlayingTemplate] If not, it will throw an [TypeError]
   ///
   /// - If animated is true, CarPlay animates the transition between templates.
   static Future<bool> push({
@@ -272,8 +273,8 @@ class FlutterCarplay {
     if (template.runtimeType == CPGridTemplate ||
         template.runtimeType == CPListTemplate ||
         template.runtimeType == CPInformationTemplate ||
-        template.runtimeType == CPPointOfInterestTemplate
-    ) {
+        template.runtimeType == CPPointOfInterestTemplate ||
+        template.runtimeType == CPNowPlayingTemplate) {
       bool isCompleted = await _carPlayController
           .reactToNativeModule(FCPChannelTypes.pushTemplate, <String, dynamic>{
         "template": template.toJson(),
@@ -287,5 +288,14 @@ class FlutterCarplay {
     } else {
       throw TypeError();
     }
+  }
+
+  /// Shows the NowPlaying template.
+  /// A convenience method for pushing the NowPlaying template.
+  static Future<bool> showNowPlaying({bool animated = true}) async {
+    return await push(
+      template: CPNowPlayingTemplate(),
+      animated: animated,
+    );
   }
 }
