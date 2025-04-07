@@ -72,8 +72,9 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
         SwiftFlutterCarplayPlugin.rootTemplate = (rootTemplate as! FCPListTemplate).get
         break
       case "FCPNowPlayingTemplate":
-        let nowPlayingTemplate = CPNowPlayingTemplate.shared
-        SwiftFlutterCarplayPlugin.objcRootTemplate = nowPlayingTemplate
+        rootTemplate = FCPNowPlayingTemplate(obj: args["rootTemplate"] as! [String : Any])
+        SwiftFlutterCarplayPlugin.rootTemplate = (rootTemplate as! FCPNowPlayingTemplate).toSuperObject()
+        SwiftFlutterCarplayPlugin.objcRootTemplate = rootTemplate
         let animated = args["animated"] as! Bool
         SwiftFlutterCarplayPlugin.animated = animated
         result(true)
