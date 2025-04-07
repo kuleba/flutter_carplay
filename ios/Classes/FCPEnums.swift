@@ -33,6 +33,9 @@ enum FCPChannelTypes {
   static let onPauseCommandTriggered = "onPauseCommandTriggered"
   static let onNextTrackCommandTriggered = "onNextTrackCommandTriggered"
   static let onPreviousTrackCommandTriggered = "onPreviousTrackCommandTriggered"
+  static let updateTabInRootTemplate = "updateTabInRootTemplate"
+  static let updateNowPlayingInfo = "updateNowPlayingInfo"
+  static let updatePlaybackPosition = "updatePlaybackPosition"
 }
 
 enum FCPAlertActionTypes {

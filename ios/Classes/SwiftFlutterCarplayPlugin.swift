@@ -321,10 +321,3 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
   }
 }
 
-// Додаємо нове значення до FCPChannelTypes
-// Спочатку знайдіть enum FCPChannelTypes і додайте новий case
-extension FCPChannelTypes {
-  static let updateTabInRootTemplate = "updateTabInRootTemplate"
-  static let updateNowPlayingInfo = "updateNowPlayingInfo"
-  static let updatePlaybackPosition = "updatePlaybackPosition"
-}
