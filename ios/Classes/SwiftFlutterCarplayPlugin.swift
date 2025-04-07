@@ -216,14 +216,14 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
       self.objcPresentTemplate = nil
       result(true)
       break
-    case CPEnumUtils.stringFromEnum(FCPChannelTypes.activateNowPlaying.toString()):
+    case FCPChannelTypes.activateNowPlaying:
       guard let args = call.arguments as? [String: Any] else {
         result(false)
         return
       }
       result(FCPNowPlayingHandler.activateNowPlaying(args: args))
       break
-    case CPEnumUtils.stringFromEnum(FCPChannelTypes.updateNowPlayingInfo.toString()):
+    case FCPChannelTypes.updateNowPlayingInfo:
       guard let args = call.arguments as? [String: Any] else {
         result(false)
         return

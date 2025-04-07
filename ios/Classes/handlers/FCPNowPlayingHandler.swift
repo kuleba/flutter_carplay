@@ -26,13 +26,13 @@ class FCPNowPlayingHandler {
     }
     
     // Налаштування Now Playing Info
-    updateNowPlayingInfo(title: title, artist: artist, isLiveStream: isLiveStream, artworkUrl: artworkUrl)
+    _ = updateNowPlayingInfo(title: title, artist: artist, isLiveStream: isLiveStream, artworkUrl: artworkUrl)
     
     // Активація дистанційного керування
     UIApplication.shared.beginReceivingRemoteControlEvents()
     
     // Перемикання на Now Playing, якщо потрібно
-    if switchToNowPlaying && FlutterCarPlaySceneDelegate.interfaceController != nil {
+    if switchToNowPlaying {
       FlutterCarPlaySceneDelegate.push(template: CPNowPlayingTemplate.shared, animated: true)
     }
     
