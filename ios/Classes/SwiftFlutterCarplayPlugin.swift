@@ -77,7 +77,7 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
           result(false)
           return
         }
-        rootTemplate = template
+        rootTemplate = template as! any FCPRootTemplate
         break
       default:
         result(false)

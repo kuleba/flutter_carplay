@@ -6,7 +6,7 @@
 import CarPlay
 
 @available(iOS 14.0, *)
-class FCPNowPlayingTemplate {
+class FCPNowPlayingTemplate: FCPRootTemplate {
   private(set) var _super: CPNowPlayingTemplate?
   private(set) var elementId: String
   private var isRootTemplate: Bool
@@ -19,7 +19,7 @@ class FCPNowPlayingTemplate {
     self._super = CPNowPlayingTemplate.shared
   }
   
-  func toSuperObject() -> CPNowPlayingTemplate? {
+  func toSuperObject() -> CPTemplate? {
     return self._super
   }
 } 
