@@ -10,6 +10,7 @@ import 'package:flutter_carplay/models/poi/poi_template.dart';
 import 'package:flutter_carplay/models/tabbar/tabbar_template.dart';
 import 'package:flutter_carplay/constants/private_constants.dart';
 import 'package:flutter_carplay/models/now_playing/now_playing_template.dart';
+import 'package:flutter_carplay/helpers/now_playing_helper.dart';
 
 /// An object in order to integrate Apple CarPlay in navigation and
 /// manage all user interface elements appearing on your screens displayed on
@@ -296,6 +297,38 @@ class FlutterCarplay {
     return await push(
       template: CPNowPlayingTemplate(),
       animated: animated,
+    );
+  }
+
+  /// Активує системний екран Now Playing та налаштовує аудіо сесію
+  static Future<bool> activateNowPlaying({
+    required String title,
+    required String artist,
+    bool isLiveStream = true,
+    String? artworkUrl,
+    bool switchToNowPlaying = true,
+  }) async {
+    return await NowPlayingHelper.activateNowPlaying(
+      title: title,
+      artist: artist,
+      isLiveStream: isLiveStream,
+      artworkUrl: artworkUrl,
+      switchToNowPlaying: switchToNowPlaying,
+    );
+  }
+
+  /// Оновлює інформацію Now Playing без переключення на екран
+  static Future<bool> updateNowPlayingInfo({
+    required String title,
+    required String artist,
+    bool isLiveStream = true,
+    String? artworkUrl,
+  }) async {
+    return await NowPlayingHelper.updateNowPlayingInfo(
+      title: title,
+      artist: artist,
+      isLiveStream: isLiveStream,
+      artworkUrl: artworkUrl,
     );
   }
 }

@@ -38,3 +38,4 @@ export "package:flutter_carplay/models/button/text_button.dart"
 export 'package:flutter_carplay/models/now_playing/now_playing_template.dart';
 
 export 'package:flutter_carplay/carplay_worker.dart' show FlutterCarplay;
+export 'package:flutter_carplay/helpers/now_playing_helper.dart';

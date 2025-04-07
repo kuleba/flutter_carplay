@@ -37,7 +37,9 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    switch call.method {
+    let method = call.method
+    
+    switch(method) {
     case FCPChannelTypes.setRootTemplate:
       guard let args = call.arguments as? [String : Any] else {
         result(false)
@@ -213,6 +215,25 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
       FlutterCarPlaySceneDelegate.popToRootTemplate(animated: animated)
       self.objcPresentTemplate = nil
       result(true)
+      break
+    case CPEnumUtils.stringFromEnum(FCPChannelTypes.activateNowPlaying.toString()):
+      guard let args = call.arguments as? [String: Any] else {
+        result(false)
+        return
+      }
+      result(FCPNowPlayingHandler.activateNowPlaying(args: args))
+      break
+    case CPEnumUtils.stringFromEnum(FCPChannelTypes.updateNowPlayingInfo.toString()):
+      guard let args = call.arguments as? [String: Any] else {
+        result(false)
+        return
+      }
+      let title = args["title"] as! String
+      let artist = args["artist"] as! String
+      let isLiveStream = args["isLiveStream"] as! Bool
+      let artworkUrl = args["artworkUrl"] as? String
+      
+      result(FCPNowPlayingHandler.updateNowPlayingInfo(title: title, artist: artist, isLiveStream: isLiveStream, artworkUrl: artworkUrl))
       break
     default:
       result(false)
