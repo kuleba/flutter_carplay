@@ -8,7 +8,8 @@
 import CarPlay
 
 @available(iOS 14.0, *)
-class FCPTabBarTemplate {
+class FCPTabBarTemplate: NSObject, FCPRootTemplate, CPTabBarTemplateDelegate {
+  private(set) var _super: CPTabBarTemplate?
   private(set) var elementId: String
   private var title: String?
   private var templates: [CPTemplate]
@@ -23,16 +24,41 @@ class FCPTabBarTemplate {
     self.templates = self.objcTemplates.map {
       $0.get
     }
+    
+    super.init()
   }
   
   var get: CPTabBarTemplate {
     let tabBarTemplate = CPTabBarTemplate.init(templates: templates)
     tabBarTemplate.tabTitle = title
+    tabBarTemplate.delegate = self
+    self._super = tabBarTemplate
     return tabBarTemplate
+  }
+  
+  func toSuperObject() -> CPTemplate? {
+    return self._super
   }
   
   public func getTemplates() -> [FCPListTemplate] {
     return objcTemplates
+  }
+  
+  // MARK: - CPTabBarTemplateDelegate
+  
+  func tabBarTemplate(_ tabBarTemplate: CPTabBarTemplate, didSelect selectedTemplate: CPTemplate) {
+    // Find selected index
+    if let index = templates.firstIndex(where: { $0 === selectedTemplate }) {
+      DispatchQueue.main.async {
+        FCPStreamHandlerPlugin.sendEvent(
+          type: FCPChannelTypes.onTabBarTemplateSelected, 
+          data: [
+            "templateId": self.elementId,
+            "selectedIndex": index
+          ]
+        )
+      }
+    }
   }
 }
 

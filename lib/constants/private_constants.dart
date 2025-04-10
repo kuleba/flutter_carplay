@@ -18,4 +18,6 @@ enum FCPChannelTypes {
   popToRootTemplate,
   activateNowPlaying,
   updateNowPlayingInfo,
+  onTabBarTemplateSelected,
+  updateTabContent,
 }

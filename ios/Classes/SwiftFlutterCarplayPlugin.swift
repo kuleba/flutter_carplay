@@ -235,6 +235,48 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
       
       result(FCPNowPlayingHandler.updateNowPlayingInfo(title: title, artist: artist, isLiveStream: isLiveStream, artworkUrl: artworkUrl))
       break
+    case FCPChannelTypes.updateTabContent:
+      guard let args = call.arguments as? [String: Any] else {
+        result(false)
+        return
+      }
+      
+      let tabIndex = args["tabIndex"] as! Int
+      let templateJson = args["template"] as! [String: Any]
+      let animated = args["animated"] as! Bool
+      
+      // Створюємо новий шаблон
+      let newListTemplate = FCPListTemplate(obj: templateJson, templateType: FCPListTemplateTypes.PART_OF_GRID_TEMPLATE)
+      
+      // Отримуємо кореневий шаблон
+      guard let rootTemplate = SwiftFlutterCarplayPlugin.rootTemplate as? FCPTabBarTemplate,
+            let tabBarTemplate = rootTemplate._super else {
+        result(false)
+        return
+      }
+      
+      // Перевіряємо індекс
+      if tabIndex < 0 || tabIndex >= tabBarTemplate.templates.count {
+        result(false)
+        return
+      }
+      
+      // Оновлюємо шаблон у табі
+      var templates = tabBarTemplate.templates
+      templates[tabIndex] = newListTemplate.get
+      
+      // Створюємо новий табовий шаблон з оновленими вкладками
+      let updatedTabBarTemplate = CPTabBarTemplate(templates: templates)
+      updatedTabBarTemplate.delegate = rootTemplate
+      
+      // Оновлюємо шаблон в пам'яті
+      rootTemplate._super = updatedTabBarTemplate
+      
+      // Встановлюємо оновлений шаблон
+      FlutterCarPlaySceneDelegate.interfaceController?.setRootTemplate(updatedTabBarTemplate, animated: animated)
+      
+      result(true)
+      break
     default:
       result(false)
       break

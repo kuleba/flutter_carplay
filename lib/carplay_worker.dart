@@ -41,6 +41,9 @@ class FlutterCarplay {
   /// the current connection status.
   Function(CPConnectionStatusTypes status)? _onCarplayConnectionChange;
 
+  /// A listener function, which will be triggered when a tab is selected
+  Function(int selectedIndex)? _onTabSelected;
+
   /// Creates an [FlutterCarplay] and starts the connection.
   FlutterCarplay() {
     _eventBroadcast = _carPlayController.eventChannel
@@ -86,6 +89,12 @@ class FlutterCarplay {
         case FCPChannelTypes.onTextButtonPressed:
           _carPlayController
               .processFCPTextButtonPressed(event["data"]["elementId"]);
+          break;
+        case FCPChannelTypes.onTabBarTemplateSelected:
+          final int selectedIndex = event["data"]["selectedIndex"];
+          if (_onTabSelected != null) {
+            _onTabSelected!(selectedIndex);
+          }
           break;
         default:
           break;
@@ -329,6 +338,49 @@ class FlutterCarplay {
       artist: artist,
       isLiveStream: isLiveStream,
       artworkUrl: artworkUrl,
+    );
+  }
+
+  /// Adds a listener for tab selection events
+  void addListenerOnTabSelected(Function(int selectedIndex) onTabSelected) {
+    _onTabSelected = onTabSelected;
+  }
+
+  /// Removes the listener for tab selection events
+  void removeListenerOnTabSelected() {
+    _onTabSelected = null;
+  }
+
+  /// Оновлює вміст вкладки з заданим індексом
+  static Future<bool> updateTabContent({
+    required int tabIndex,
+    required CPListTemplate newTemplate,
+    bool animated = true,
+  }) async {
+    if (FlutterCarPlayController.currentRootTemplate == null ||
+        FlutterCarPlayController.currentRootTemplate.runtimeType !=
+            CPTabBarTemplate) {
+      return false;
+    }
+
+    CPTabBarTemplate rootTemplate =
+        FlutterCarPlayController.currentRootTemplate;
+
+    if (tabIndex < 0 || tabIndex >= rootTemplate.templates.length) {
+      return false;
+    }
+
+    // Оновлюємо шаблон в списку
+    rootTemplate.templates[tabIndex] = newTemplate;
+
+    // Оновлюємо кореневий шаблон
+    return await _carPlayController.reactToNativeModule(
+      FCPChannelTypes.updateTabContent,
+      <String, dynamic>{
+        "tabIndex": tabIndex,
+        "template": newTemplate.toJson(),
+        "animated": animated,
+      },
     );
   }
 }
