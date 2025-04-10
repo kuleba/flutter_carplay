@@ -61,6 +61,3 @@ class FCPTabBarTemplate: NSObject, FCPRootTemplate, CPTabBarTemplateDelegate {
     }
   }
 }
-
-@available(iOS 14.0, *)
-extension FCPTabBarTemplate: FCPRootTemplate { }
