@@ -249,8 +249,8 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
       let newListTemplate = FCPListTemplate(obj: templateJson, templateType: FCPListTemplateTypes.PART_OF_GRID_TEMPLATE)
       
       // Отримуємо кореневий шаблон
-      guard let rootTemplate = SwiftFlutterCarplayPlugin.rootTemplate as? FCPTabBarTemplate,
-            let tabBarTemplate = rootTemplate._super else {
+      guard let rootTemplate = SwiftFlutterCarplayPlugin.objcRootTemplate as? FCPTabBarTemplate,
+            let tabBarTemplate = rootTemplate.toSuperObject() as? CPTabBarTemplate else {
         result(false)
         return
       }
@@ -269,11 +269,11 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
       let updatedTabBarTemplate = CPTabBarTemplate(templates: templates)
       updatedTabBarTemplate.delegate = rootTemplate
       
-      // Оновлюємо шаблон в пам'яті
-      rootTemplate._super = updatedTabBarTemplate
+      // Зберігаємо оновлений шаблон
+      SwiftFlutterCarplayPlugin.rootTemplate = updatedTabBarTemplate
       
-      // Встановлюємо оновлений шаблон
-      FlutterCarPlaySceneDelegate.interfaceController?.setRootTemplate(updatedTabBarTemplate, animated: animated)
+      // Виконуємо оновлення шаблону через публічний метод
+      FlutterCarPlaySceneDelegate.updateRootTemplate(template: updatedTabBarTemplate, animated: animated)
       
       result(true)
       break

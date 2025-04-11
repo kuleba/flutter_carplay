@@ -55,6 +55,10 @@ class FlutterCarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelega
     })
   }
   
+  static public func updateRootTemplate(template: CPTemplate, animated: Bool) {
+    self.interfaceController?.setRootTemplate(template, animated: animated)
+  }
+  
   func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
                                 didConnect interfaceController: CPInterfaceController) {
     FlutterCarPlaySceneDelegate.interfaceController = interfaceController
