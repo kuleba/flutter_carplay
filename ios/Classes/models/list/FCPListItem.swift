@@ -66,11 +66,10 @@ class FCPListItem {
   }
   
   public func stopHandler() {
-    guard self.completeHandler != nil else {
-      return
+    if let handler = self.completeHandler {
+      handler()
+      self.completeHandler = nil
     }
-    self.completeHandler!()
-    self.completeHandler = nil
   }
   
   public func update(text: String?, detailText: String?, image: String?, playbackProgress: CGFloat?, isPlaying: Bool?, playingIndicatorLocation: String?, accessoryType: String?) {

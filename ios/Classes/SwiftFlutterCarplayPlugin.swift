@@ -117,9 +117,16 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
         result(false)
         return
       }
+      var found = false
       SwiftFlutterCarplayPlugin.findItem(elementId: args, actionWhenFound: { item in
         item.stopHandler()
+        found = true
       })
+      if !found {
+        SwiftFlutterCarplayPlugin.findItem(elementId: args, actionWhenFound: { item in
+          item.stopHandler()
+        })
+      }
       result(true)
       break
     case FCPChannelTypes.setAlert:
