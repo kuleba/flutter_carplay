@@ -235,6 +235,22 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
       
       result(FCPNowPlayingHandler.updateNowPlayingInfo(title: title, artist: artist, isLiveStream: isLiveStream, artworkUrl: artworkUrl))
       break
+    case FCPChannelTypes.updateTab:
+      guard let args = call.arguments as? [String: Any] else {
+        result(false)
+        return
+      }
+      let index = args["index"] as! Int
+      let template = args["template"] as! [String: Any]
+      
+      if let tabBarTemplate = rootTemplate as? CPTabBarTemplate {
+        let newTemplate = FCPListTemplate(obj: template, templateType: FCPListTemplateTypes.DEFAULT).get
+        tabBarTemplate.templates[index] = newTemplate
+        result(true)
+      } else {
+        result(false)
+      }
+      break
     default:
       result(false)
       break

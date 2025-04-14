@@ -331,4 +331,32 @@ class FlutterCarplay {
       artworkUrl: artworkUrl,
     );
   }
+
+  /// Оновлює вміст вкладки за індексом
+  static Future<bool> updateTab({
+    required int index,
+    required CPListTemplate template,
+  }) async {
+    return await _carPlayController.methodChannel.invokeMethod(
+      'updateTab',
+      <String, dynamic>{
+        'index': index,
+        'template': template.toJson(),
+      },
+    );
+  }
+
+  /// Додає слухача зміни вкладок
+  void addListenerOnTabChange(Function(int index) onTabChange) {
+    _carPlayController.eventChannel.receiveBroadcastStream().listen((event) {
+      if (event['type'] == FCPChannelTypes.onTabChanged.toString()) {
+        onTabChange(event['data']['index']);
+      }
+    });
+  }
+
+  /// Видаляє слухача зміни вкладок
+  void removeListenerOnTabChange() {
+    _carPlayController.eventChannel.receiveBroadcastStream().listen(null);
+  }
 }
