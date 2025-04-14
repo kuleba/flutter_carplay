@@ -37,10 +37,15 @@ class FCPListItem {
     let listItem = CPListItem.init(text: text, detailText: detailText)
     listItem.handler = ((CPSelectableListItem, @escaping () -> Void) -> Void)? { selectedItem, complete in
       if self.isOnPressListenerActive == true {
+        self.completeHandler = complete
+        
         DispatchQueue.main.async {
-          self.completeHandler = complete
           FCPStreamHandlerPlugin.sendEvent(type: FCPChannelTypes.onListItemSelected,
                                            data: ["elementId": self.elementId])
+          
+          DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.stopHandler()
+          }
         }
       } else {
         complete()
