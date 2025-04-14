@@ -243,7 +243,7 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
       let index = args["index"] as! Int
       let template = args["template"] as! [String: Any]
       
-      if let tabBarTemplate = rootTemplate as? CPTabBarTemplate {
+      if let tabBarTemplate = SwiftFlutterCarplayPlugin.rootTemplate as? CPTabBarTemplate {
         let newTemplate = FCPListTemplate(obj: template, templateType: FCPListTemplateTypes.DEFAULT).get
         tabBarTemplate.templates[index] = newTemplate
         result(true)

@@ -41,6 +41,9 @@ class FlutterCarplay {
   /// the current connection status.
   Function(CPConnectionStatusTypes status)? _onCarplayConnectionChange;
 
+  /// Callback function will be fired when CarPlay tab is changed.
+  Function(int index)? _onTabChange;
+
   /// Creates an [FlutterCarplay] and starts the connection.
   FlutterCarplay() {
     _eventBroadcast = _carPlayController.eventChannel
@@ -61,6 +64,11 @@ class FlutterCarplay {
               CPEnumUtils.stringFromEnum(connectionStatus.toString());
           if (_onCarplayConnectionChange != null) {
             _onCarplayConnectionChange!(connectionStatus);
+          }
+          break;
+        case FCPChannelTypes.onTabChanged:
+          if (_onTabChange != null) {
+            _onTabChange!(event["data"]["index"]);
           }
           break;
         case FCPChannelTypes.onFCPListItemSelected:
@@ -348,15 +356,11 @@ class FlutterCarplay {
 
   /// Додає слухача зміни вкладок
   void addListenerOnTabChange(Function(int index) onTabChange) {
-    _carPlayController.eventChannel.receiveBroadcastStream().listen((event) {
-      if (event['type'] == FCPChannelTypes.onTabChanged.toString()) {
-        onTabChange(event['data']['index']);
-      }
-    });
+    _onTabChange = onTabChange;
   }
 
   /// Видаляє слухача зміни вкладок
   void removeListenerOnTabChange() {
-    _carPlayController.eventChannel.receiveBroadcastStream().listen(null);
+    _onTabChange = null;
   }
 }

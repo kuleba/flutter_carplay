@@ -65,8 +65,14 @@ class FlutterCarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelega
     if rootTemplate != nil {
       FlutterCarPlaySceneDelegate.interfaceController?.setRootTemplate(rootTemplate!, animated: SwiftFlutterCarplayPlugin.animated, completion: nil)
       
+      // Додаємо обробник зміни вкладок
       if let tabBarTemplate = rootTemplate as? CPTabBarTemplate {
-        tabBarTemplate.tabBarDelegate = self
+        interfaceController.tabBarTemplate(tabBarTemplate, didSelect: { selectedTemplate in
+          if let index = tabBarTemplate.templates.firstIndex(of: selectedTemplate) {
+            FCPStreamHandlerPlugin.sendEvent(type: FCPChannelTypes.onTabChanged,
+                                           data: ["index": index])
+          }
+        })
       }
     }
   }
@@ -83,14 +89,5 @@ class FlutterCarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelega
     SwiftFlutterCarplayPlugin.onCarplayConnectionChange(status: FCPConnectionTypes.disconnected)
     
     //FlutterCarPlaySceneDelegate.interfaceController = nil
-  }
-}
-
-extension FlutterCarPlaySceneDelegate: CPTabBarTemplateDelegate {
-  func tabBarTemplate(_ tabBarTemplate: CPTabBarTemplate, didSelect selectedTemplate: CPTemplate) {
-    if let index = tabBarTemplate.templates.firstIndex(of: selectedTemplate) {
-      FCPStreamHandlerPlugin.sendEvent(type: FCPChannelTypes.onTabChanged.rawValue,
-                                     data: ["index": index])
-    }
   }
 }
