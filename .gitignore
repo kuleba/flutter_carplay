@@ -8,3 +8,4 @@ build/
 
 .fvm/
 .vscode/settings.json
+.idea/

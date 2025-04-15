@@ -67,12 +67,8 @@ class FlutterCarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelega
       
       // Додаємо обробник зміни вкладок
       if let tabBarTemplate = rootTemplate as? CPTabBarTemplate {
-        interfaceController.tabBarTemplate(tabBarTemplate, didSelect: { selectedTemplate in
-          if let index = tabBarTemplate.templates.firstIndex(of: selectedTemplate) {
-            FCPStreamHandlerPlugin.sendEvent(type: FCPChannelTypes.onTabChanged,
-                                           data: ["index": index])
-          }
-        })
+        // Використовуємо делегат сцени для відстеження зміни вкладок
+        tabBarTemplate.delegate = self
       }
     }
   }
@@ -89,5 +85,15 @@ class FlutterCarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelega
     SwiftFlutterCarplayPlugin.onCarplayConnectionChange(status: FCPConnectionTypes.disconnected)
     
     //FlutterCarPlaySceneDelegate.interfaceController = nil
+  }
+}
+
+// Додаємо розширення для обробки зміни вкладок
+extension FlutterCarPlaySceneDelegate: CPTabBarTemplateDelegate {
+  func tabBarTemplate(_ tabBarTemplate: CPTabBarTemplate, didSelect selectedTemplate: CPTemplate) {
+    if let index = tabBarTemplate.templates.firstIndex(of: selectedTemplate) {
+      FCPStreamHandlerPlugin.sendEvent(type: FCPChannelTypes.onTabChanged,
+                                     data: ["index": index])
+    }
   }
 }

@@ -245,7 +245,15 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
       
       if let tabBarTemplate = SwiftFlutterCarplayPlugin.rootTemplate as? CPTabBarTemplate {
         let newTemplate = FCPListTemplate(obj: template, templateType: FCPListTemplateTypes.DEFAULT).get
-        tabBarTemplate.templates[index] = newTemplate
+        
+        var templates = tabBarTemplate.templates
+        templates[index] = newTemplate
+        
+        let newTabBarTemplate = CPTabBarTemplate(templates: templates)
+        SwiftFlutterCarplayPlugin.rootTemplate = newTabBarTemplate
+        
+        FlutterCarPlaySceneDelegate.forceUpdateRootTemplate()
+        
         result(true)
       } else {
         result(false)
